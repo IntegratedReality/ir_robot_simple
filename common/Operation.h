@@ -1,5 +1,8 @@
 #pragma once
 
+
+using permsAry = std::array<bool, 9>;
+
 enum EDirection {
 	NO_INPUT,
 	TOP,

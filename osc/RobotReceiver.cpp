@@ -20,7 +20,7 @@ RobotData RobotReceiver::getData() {
 	return data;
 }
 
-std::array<bool, 9> RobotReceiver::getPermissions(){
+permsAry RobotReceiver::getPermissions(){
   return permissions;
 }
 

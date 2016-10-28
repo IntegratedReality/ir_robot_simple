@@ -8,15 +8,16 @@
 
 #include "../common/RobotData.h"
 #include "../common/Const.h"
+#include "../common/Operation.h"
 
 class RobotListener : public osc::OscPacketListener {
 	public:
-		RobotListener(RobotData& _data, std::array<bool, 9>& _permissions);
+		RobotListener(RobotData& _data, permsAry& _permissions);
 		virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndPoint );
 		bool checkMessageReceived(void);
 	private:
 		RobotData& data;
-    std::array<bool, 9>& permissions;
+    permsAry& permissions;
 		//ETeam *owner;
 		bool m_message_received;
 };

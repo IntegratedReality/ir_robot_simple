@@ -20,7 +20,7 @@ class RobotReceiver {
 		void init();
 		void update();
 		RobotData getData();
-    std::array<bool, 9> getPermissions();
+    permsAry getPermissions();
 		//ETeam getPOOwner(int _id);
 		bool checkMessageReceived(void);
 	private:
@@ -30,6 +30,6 @@ class RobotReceiver {
 
     std::unique_ptr<UdpListeningReceiveSocket> s;
 		RobotData data;
-    std::array<bool, 9> permissions;
+    permsAry permissions;
 		//ETeam owner[3];
 };

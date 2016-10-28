@@ -7,7 +7,7 @@ using namespace std;
 
 extern std::mutex mutex_obj;
 
-RobotListener::RobotListener(RobotData& _data, std::array<bool, 9>& _permissions):
+RobotListener::RobotListener(RobotData& _data, permsAry& _permissions):
   data(_data),
   permissions(_permissions)
 {
