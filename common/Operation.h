@@ -1,5 +1,5 @@
 #pragma once
-
+#include <array>
 
 using permsAry = std::array<bool, 9>;
 
