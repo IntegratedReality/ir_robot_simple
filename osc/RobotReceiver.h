@@ -9,7 +9,6 @@
 #include <oscpack/ip/UdpSocket.h>
 
 #include "../common/RobotData.h"
-#include "../common/Const.h"
 #include "RobotListener.h"
 
 const int PORT_ROBOT{8000};

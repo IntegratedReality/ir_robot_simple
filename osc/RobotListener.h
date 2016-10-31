@@ -7,7 +7,6 @@
 #include <oscpack/ip/UdpSocket.h>
 
 #include "../common/RobotData.h"
-#include "../common/Const.h"
 #include "../common/Operation.h"
 
 class RobotListener : public osc::OscPacketListener {
