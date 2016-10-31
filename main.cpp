@@ -193,7 +193,7 @@ int main(int argc, char **argv)
     } else {
       brake = true;
       //許可がない場合.
-      //vやomegaはスコープ内で宣言してるか0になってくれるので放置でOK
+      //vやomegaはスコープ内で宣言してるから0になってくれるので放置でOK
     }
     /*
     switch ((ID < 3 && !data.isAI)
