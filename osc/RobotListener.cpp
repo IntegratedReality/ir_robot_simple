@@ -7,7 +7,7 @@ using namespace std;
 
 extern std::mutex mutex_obj;
 
-RobotListener::RobotListener(RobotData& _data, permsAry& _permissions):
+RobotListener::RobotListener(RobotData* _data, permsAry* _permissions):
   data(_data),
   permissions(_permissions)
 {
@@ -28,18 +28,18 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 
 			//args >> id >> time >> x >> y >> theta >> HP >> EN >> state >> osc::EndMessage;
       args >> time >> x >> y >> theta;
-      for(auto& e: permissions){
+      for(auto& e: *permissions){
         args >> e;
       }
       std::cerr<<std::endl;
 
       args >> osc::EndMessage;
 			//data.id = id;
-			data.time = time;
+			data->time = time;
 			//cout << time << endl;
-			data.pos.x = x;
-			data.pos.y = y;
-			data.pos.theta = theta;
+			data->pos.x = x;
+			data->pos.y = y;
+			data->pos.theta = theta;
 			//data.HP = HP;
 			//data.EN = EN;
 			//data.state = (EState)state;
@@ -62,7 +62,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			//args >> isAI >> drc >> shot >> osc::EndMessage;
       args >> drc >> osc::EndMessage;
 			//data.isAI = isAI;
-			data.operation.direction = (EDirection)drc;
+			data->operation.direction = (EDirection)drc;
 			//data.operation.shot = shot;
 		}
 	} catch(osc::Exception& e) {

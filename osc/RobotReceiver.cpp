@@ -7,7 +7,7 @@ void RobotReceiver::init() {
   data.init();
 
 	//listener.setup(data, permissions);
-  listener_ptr=std::unique_ptr<RobotListener>(new RobotListener(data, permissions));
+  listener_ptr=std::unique_ptr<RobotListener>(new RobotListener(&data, &permissions));
   s = std::unique_ptr<UdpListeningReceiveSocket>
     (new UdpListeningReceiveSocket
      (IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT_ROBOT), listener_ptr.get() )
