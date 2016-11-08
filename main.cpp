@@ -128,8 +128,6 @@ int main(int argc, char **argv)
 
 
 	while (1) {
-    // ここを弄るといいらしい
-
     RobotData data;
     data = receiver.getData();
     permsAry permissions = receiver.getPermissions();
@@ -146,22 +144,15 @@ int main(int argc, char **argv)
     double max_v = 0.1, max_omega = 0.001;
     double v = 0, omega = 0;
 
-    // オーバードライブ防止処理
-    //bool F, B;
-    //checkMovable(data.pos, F, B);
-    //前に動く許可がF, 後ろに動く許可がBに代入される
-
-    //bool MoveSURUNO = true;
-
     double ofsetRotate = 2.7;
     double ofsetMoving = 1.0;
-    bool brake{false};
+    //bool brake{false};
 
     //動作許可を反映してトルク設定
-    if (permissions[static_cast<int>(data.operation.direction)]){
+    if (permissions[static_cast<size_t>(data.operation.direction)]){
       switch (data.operation.direction){
         case NO_INPUT:
-          brake = true;
+          //brake = true;
           break;
         case TOP:
           v = max_v;
@@ -193,81 +184,28 @@ int main(int argc, char **argv)
           break;
       }
     } else {
-      brake = true;
+      //brake = true;
       //許可がない場合.
       //vやomegaはスコープ内で宣言してるから0になってくれるので放置でOK
     }
-    /*
-    switch ((ID < 3 && !data.isAI)
-        ? data.operation.direction :
-        ai.getOperation().direction
-        ) {
-      case NO_INPUT:
-        break;
-      case TOP:
-        v = (double)F * max_v;
-        MoveSURUNO = F;
-        break;
-      case TOP_RIGHT:
-        v = (double)F * max_v;
-        omega = -ofsetMoving * max_omega;
-        MoveSURUNO = F;
-        break;
-      case RIGHT:
-        omega = - ofsetRotate * max_omega;
-        break;
-      case BOTTOM_RIGHT:
-        v = -((double)B * max_v);
-        omega = ofsetMoving * max_omega;
-        MoveSURUNO = B;
-        break;
-      case BOTTOM:
-        v = -((double)B * max_v);
-        MoveSURUNO = B;
-        break;
-      case BOTTOM_LEFT:
-        v = -((double)B * max_v);
-        omega = -ofsetMoving * max_omega;
-        MoveSURUNO = B;
-        break;
-      case LEFT:
-        omega = ofsetRotate * max_omega;
-        break;
-      case TOP_LEFT:
-        v = (double)F * max_v;
-        omega = ofsetMoving * max_omega;
-        MoveSURUNO = F;
-        break;
-    }
-
-    bool active = true;
-    if (data.state == DEAD || data.state == STANDBY) active = false;
-    */
 
     mutex_obj.lock();
     drive.setTarget
       (v,
        omega,
-       (brake ? MotorMode::Brake : MotorMode::Move)
+       MotorMode::Move
        );
     mutex_obj.unlock();
-    // ここまでを弄る
 
     if (count != 3000) {
       count++;
       continue;
     }
-    //	cout << F << B << endl;
     cout << "v: " << v << " ";
     cout << "omega: " << omega << " ";
-    cout << "x: " << data.pos.x << " ";
-    cout << "y: " << data.pos.y << " ";
-    cout << "theta: " << data.pos.theta << " ";
     cout << "time: " << data.time << " ";
-    //cout << "isAI: " << data.isAI << " ";
-    //cout << "state: " << data.state << " ";
     cout << "drc: " << data.operation.direction << " ";
-    //cout << "shot: " << ((ID < 3 && !data.isAI) ? data.operation.shot : ai.getOperation().shot) << " ";
+    //cout << "brake: "<<brake;
     cout << endl;
     count = 0;
 
@@ -276,60 +214,3 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-//Position p1(1800 / 4., 2700 / 4., 0);
-//Position p2(2 * 1800 / 4., 2 * 2700 / 4., 0);
-//Position p3(3 * 1800 / 4., 3 * 2700 / 4., 0);
-
-/*
-void checkMovable(Position _pos, bool &_F, bool &_B) {
-	double vx = cos(_pos.theta), vy = sin(_pos.theta);
-	_F = true;
-	_B = true;
-
-  Eigen::Vector2f velocity(vx, vy);
-
-	// フィールド上辺
-	if (_pos.y < 130) {
-		if (vy < 0) _F = false; 
-		else _B = false;
-	} 
-	// 右辺
-	if (_pos.x > 1800 - 130) {
-		if (vx > 0) _F = false; 
-		else _B = false;
-	}
-	// 下辺
-	if (_pos.y > 2700 - 130) {
-		if (vy > 0) _F = false; 
-		else _B = false;
-	}
-	// 左辺
-	if (_pos.x < 130) {
-		if (vx < 0) _F = false; 
-		else _B = false;
-	}
-	// ポイントオブジェクト1
-	if (distance(_pos, p1) < 125 + 100 + 30) {
-    Eigen::Vector2f dirToObj(p1.x-_pos.x, p1.y-_pos.y);
-		if (dirToObj.dot(velocity) > 0) _F = false;
-		else _B = false;
-	}
-	// ポイントオブジェクト2
-	if (distance(_pos, p2) < 125 + 100 + 30) {
-    Eigen::Vector2f dirToObj(p2.x-_pos.x, p2.y-_pos.y);
-		if (dirToObj.dot(velocity) > 0) _F = false;
-		else _B = false;
-	}
-	// ポイントオブジェクト3
-	if (distance(_pos, p3) < 125 + 100 + 30) {
-    Eigen::Vector2f dirToObj(p3.x-_pos.x, p3.y-_pos.y);
-		if (dirToObj.dot(velocity) > 0) _F = false;
-		else _B = false;
-	}
-}
-
-double distance(Position _p1, Position _p2) {
-	return sqrt(pow(_p1.x - _p2.x, 2.) + pow(_p1.y - _p2.y, 2.));
-}
-
-*/

@@ -31,7 +31,6 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
       for(auto& e: *permissions){
         args >> e;
       }
-      std::cerr<<std::endl;
 
       args >> osc::EndMessage;
 			//data.id = id;

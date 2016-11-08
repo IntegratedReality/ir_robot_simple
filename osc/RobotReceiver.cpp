@@ -5,6 +5,9 @@ void RobotReceiver::init() {
 		//data[i].init();
 	//}
   data.init();
+  for(auto& e: permissions){
+    e = false;
+  }
 
 	//listener.setup(data, permissions);
   listener_ptr=std::unique_ptr<RobotListener>(new RobotListener(&data, &permissions));
