@@ -130,18 +130,18 @@ int main(int argc, char **argv)
 	while (1) {
     // ここを弄るといいらしい
 
-    /*			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, ai.getOperation().shot);
-            for (int i = 0; i < 6; i++) {
-            ai.setRobotData(i, receiver.getData(i));
-            }
-            for (int i = 0; i < 3; i++) {
-            ai.setPOOwner(i, receiver.getPOOwner(i));
-            }
-            ai.update();
-            */	
     RobotData data;
     data = receiver.getData();
-    auto permissions = receiver.getPermissions();
+    permsAry permissions = receiver.getPermissions();
+
+    //for debug
+    /*
+    std::cerr << "Permissions: ";
+    for(auto& p:permissions){
+      std::cerr << p << ", ";
+    }
+    std::cerr<<std::endl;
+    */
 
     double max_v = 0.1, max_omega = 0.001;
     double v = 0, omega = 0;

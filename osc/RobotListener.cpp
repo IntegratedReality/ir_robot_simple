@@ -31,6 +31,8 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
       for(auto& e: permissions){
         args >> e;
       }
+      std::cerr<<std::endl;
+
       args >> osc::EndMessage;
 			//data.id = id;
 			data.time = time;
@@ -51,7 +53,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			args >> id >> team >> osc::EndMessage;
 			owner[id] = (ETeam)team;
 		} */ 
-    else if (std::strcmp(m.AddressPattern(), "/ctrlr/operation") == 0) {
+    else if (std::strcmp(m.AddressPattern(), "/operator/operation") == 0) {
 			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
 			//bool isAI;
 			osc::int32 drc;
