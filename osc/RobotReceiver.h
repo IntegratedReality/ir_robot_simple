@@ -20,8 +20,8 @@ class RobotReceiver {
 		void update();
 		RobotData getData();
     	permsAry getPermissions();
-		double getcdr() {return CoDuty_right};
-		double getcdl() {return CoDuty_left};
+		double getcdr() {return CoDuty_right;}
+		double getcdl() {return CoDuty_left;}
 		//ETeam getPOOwner(int _id);
 		bool checkMessageReceived(void);
 	private:

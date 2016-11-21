@@ -90,15 +90,15 @@ bool DriveClass::updateDrive(void)
     return true;
 }
 
-void Adjust_duty(double CoDuty_right, double CoDuty_left)
+void DriveClass::Adjust_duty(double CoDuty_right, double CoDuty_left)
 {
     MotorMode mode_r = this->right_motor.getMotorMode();
-    double duty_r = this->right_motor.getMotorDuty();
-    MotorMode mode_l = CoDuty_right * this->left_motor.getMotorMode();
+    double duty_r = CoDuty_right * this->right_motor.getMotorDuty();
+    MotorMode mode_l = this->left_motor.getMotorMode();
     double duty_l = CoDuty_left * this->left_motor.getMotorDuty();
 
     this->right_motor.setMotor(mode_r, duty_r);
-    this->left_motor.setMotor(duty_l, duty_l);
+    this->left_motor.setMotor(mode_l, duty_l);
 }
 
 double DriveClass::getTargetVelocity(void) const
