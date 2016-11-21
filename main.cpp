@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 			drive.updateDrive();
 			//static bool last_shot_state = receiver.getData(ID).operation.shot;
       /*
-			if (ID < 3 
+			if (ID < 3
           && !(receiver.getData().isAI ||
             receiver.getData().state == DEAD ||
             receiver.getData().state == STANDBY)
@@ -131,6 +131,8 @@ int main(int argc, char **argv)
     RobotData data;
     data = receiver.getData();
     permsAry permissions = receiver.getPermissions();
+    double coduty_r = receiver.getcdr();
+    double coduty_l = receiver.getcdl();
 
     //for debug
     /*
@@ -195,6 +197,7 @@ int main(int argc, char **argv)
        omega,
        MotorMode::Move
        );
+    drive.Adjust_duty(coduty_r, coduty_l);
     mutex_obj.unlock();
 
     if (count != 3000) {
@@ -213,4 +216,3 @@ int main(int argc, char **argv)
 	}
 	return 0;
 }
-

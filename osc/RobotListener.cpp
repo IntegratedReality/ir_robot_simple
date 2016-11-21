@@ -7,9 +7,11 @@ using namespace std;
 
 extern std::mutex mutex_obj;
 
-RobotListener::RobotListener(RobotData* _data, permsAry* _permissions):
+RobotListener::RobotListener(RobotData* _data, permsAry* _permissions, double* _right, double: _left):
   data(_data),
-  permissions(_permissions)
+  permissions(_permissions),
+  CoDuty_right(_right),
+  CoDuty_left(_left)
 {
 }
 
@@ -51,7 +53,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 
 			args >> id >> team >> osc::EndMessage;
 			owner[id] = (ETeam)team;
-		} */ 
+		} */
     else if (std::strcmp(m.AddressPattern(), "/operator/operation") == 0) {
 			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
 			//bool isAI;
@@ -64,6 +66,13 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			data->operation.direction = (EDirection)drc;
 			//data.operation.shot = shot;
 		}
+        else if (std::strcmp(m.AddressPattern(), "/operator/duty") == 0) {
+            osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
+            double l,r;
+            args >> l >> r >> osc::EndMessage;
+            CoDuty_right = r;
+            CoDuty_left = l;
+        }
 	} catch(osc::Exception& e) {
 		std::cout << "error while parsing message :."
 			<< m.AddressPattern() << ": " << e.what() << "\n";

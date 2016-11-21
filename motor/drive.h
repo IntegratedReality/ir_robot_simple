@@ -37,4 +37,6 @@ public:
     double getTargetOmega(void) const;
     double getNowVelocity(void) const;
     double getNowOmega(void) const;
+
+    void Adjust_duty(double, double);
 };
