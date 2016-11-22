@@ -10,8 +10,8 @@ extern std::mutex mutex_obj;
 RobotListener::RobotListener(RobotData* _data, permsAry* _permissions, double* _right, double* _left):
   data(_data),
   permissions(_permissions),
-  CoDuty_right(_right),
-  CoDuty_left(_left)
+  Duty_right(_right),
+  Duty_left(_left)
 {
 }
 
@@ -70,8 +70,8 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
             osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
             double l,r;
             args >> l >> r >> osc::EndMessage;
-            *CoDuty_right = r;
-            *CoDuty_left = l;
+            *Duty_right = r;
+            *Duty_left = l;
         }
 	} catch(osc::Exception& e) {
 		std::cout << "error while parsing message :."

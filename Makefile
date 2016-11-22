@@ -42,4 +42,4 @@ clean:
 -include $(DEPS)
 
 run:
-	./main.bin `uname -n | cut -c 7`
+	sudo ./main.bin 

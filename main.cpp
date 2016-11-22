@@ -61,27 +61,28 @@ int main(int argc, char **argv)
   //最初のメッセージが来るまでブロック
 	while (!receiver.checkMessageReceived());
 
-	DriveClass drive(MotorClass(22, 27, false),
-      MotorClass(17, 18, true),
-      receiver.getData().pos.x,
-      receiver.getData().pos.y,
-      receiver.getData().pos.theta,
-      receiver.getData().time
-      );
+	//DriveClass drive(MotorClass(22, 27, false),
+  //    MotorClass(17, 18, true),
+  //    receiver.getData().pos.x,
+  //    receiver.getData().pos.y,
+  //    receiver.getData().pos.theta,
+  //    receiver.getData().time
+  //    );
+  MotorClass motorRight(22,27,false), motorLeft(17,18,true);
 
+/*
 	std::thread robot_control_thread([&](){
 		while (true) {
 			while (!receiver.checkMessageReceived());
 			mutex_obj.lock();
-			drive.updateData(
-          receiver.getData().pos.x,
-          receiver.getData().pos.y,
-          receiver.getData().pos.theta,
-          receiver.getData().time
-          );
-			drive.updateDrive();
+			//drive.updateData(
+          //receiver.getData().pos.x,
+          //receiver.getData().pos.y,
+          //receiver.getData().pos.theta,
+          //receiver.getData().time
+          //);
+			//drive.updateDrive();
 			//static bool last_shot_state = receiver.getData(ID).operation.shot;
-      /*
 			if (ID < 3
           && !(receiver.getData().isAI ||
             receiver.getData().state == DEAD ||
@@ -92,11 +93,11 @@ int main(int argc, char **argv)
 				}
 			}
 			last_shot_state = receiver.getData(ID).operation.shot;
-      */
 			mutex_obj.unlock();
 		}
 	});
 	robot_control_thread.detach();
+*/
 
 	long count = 0;
 	/*
@@ -125,88 +126,91 @@ int main(int argc, char **argv)
   */
 
 
-
-
 	while (1) {
     RobotData data;
     data = receiver.getData();
     permsAry permissions = receiver.getPermissions();
-    double coduty_r = receiver.getcdr();
-    double coduty_l = receiver.getcdl();
+    double duty_r = receiver.getDutyRight();
+    double duty_l = receiver.getDutyLeft();
+    //double max_v = 0.1, max_omega = 0.001;
+    //double v = 0, omega = 0;
 
-    //for debug
-    /*
-    std::cerr << "Permissions: ";
-    for(auto& p:permissions){
-      std::cerr << p << ", ";
-    }
-    std::cerr<<std::endl;
-    */
+  double coefRot = 0.5;
+  double coefCurve = 0.7;
 
-    double max_v = 0.1, max_omega = 0.001;
-    double v = 0, omega = 0;
-
-    double ofsetRotate = 2.7;
-    double ofsetMoving = 1.0;
-    //bool brake{false};
-
-    //動作許可を反映してトルク設定
-    if (permissions[static_cast<size_t>(data.operation.direction)]){
+    //トルク設定
       switch (data.operation.direction){
         case NO_INPUT:
           //brake = true;
+          motorRight.setMotor(MotorMode::Brake, 0.0);
+          motorLeft.setMotor(MotorMode::Brake, 0.0);
           break;
         case TOP:
-          v = max_v;
+          //v = max_v;
+          motorRight.setMotor(MotorMode::Move, duty_r);
+          motorLeft.setMotor(MotorMode::Move, duty_l);
           break;
         case TOP_RIGHT:
-          v = max_v;
-          omega = -ofsetMoving * max_omega;
+          //v = max_v;
+          //omega = -ofsetMoving * max_omega;
+          motorRight.setMotor(MotorMode::Move, duty_r*coefCurve);
+          motorLeft.setMotor(MotorMode::Move, duty_l);
           break;
         case RIGHT:
-          omega = - ofsetRotate * max_omega;
+          //omega = - ofsetRotate * max_omega;
+          motorRight.setMotor(MotorMode::Move, -duty_r*coefRot);
+          motorLeft.setMotor(MotorMode::Move, duty_l*coefRot);
           break;
         case BOTTOM_RIGHT:
-          v = -(max_v);
-          omega = ofsetMoving * max_omega;
+          //v = -(max_v);
+          //omega = ofsetMoving * max_omega;
+          motorRight.setMotor(MotorMode::Move, -duty_r*coefCurve);
+          motorLeft.setMotor(MotorMode::Move, -duty_l);
           break;
         case BOTTOM:
-          v = -(max_v);
+          //v = -(max_v);
+          motorRight.setMotor(MotorMode::Move, -duty_r);
+          motorLeft.setMotor(MotorMode::Move, -duty_l);
           break;
         case BOTTOM_LEFT:
-          v = -(max_v);
-          omega = -ofsetMoving * max_omega;
+          //v = -(max_v);
+          //omega = -ofsetMoving * max_omega;
+          motorRight.setMotor(MotorMode::Move, -duty_r);
+          motorLeft.setMotor(MotorMode::Move, -duty_l*coefCurve);
           break;
         case LEFT:
-          omega = ofsetRotate * max_omega;
+          //omega = ofsetRotate * max_omega;
+          motorRight.setMotor(MotorMode::Move, duty_r*coefRot);
+          motorLeft.setMotor(MotorMode::Move, -duty_l*coefRot);
           break;
         case TOP_LEFT:
-          v = max_v;
-          omega = ofsetMoving * max_omega;
+          //v = max_v;
+          //omega = ofsetMoving * max_omega;
+          motorRight.setMotor(MotorMode::Move, duty_r);
+          motorLeft.setMotor(MotorMode::Move, duty_l*coefCurve);
           break;
       }
-    } else {
-      //brake = true;
       //許可がない場合.
-      //vやomegaはスコープ内で宣言してるから0になってくれるので放置でOK
-    }
+          //motorRight.setMotor(MotorMode::Stop, 0.0);
+          //motorLeft.setMotor(MotorMode::Stop, 0.0);
 
-    mutex_obj.lock();
-    drive.setTarget
-      (v,
-       omega,
-       MotorMode::Move
-       );
-    drive.Adjust_duty(coduty_r, coduty_l);
-    mutex_obj.unlock();
+    //mutex_obj.lock();
+    //drive.setTarget
+    //  (v,
+    //   omega,
+    //   MotorMode::Move
+    //   );
+    //drive.Adjust_duty(coduty_r, coduty_l);
+    //mutex_obj.unlock();
 
     if (count != 3000) {
       count++;
       continue;
     }
-    cout << "v: " << v << " ";
-    cout << "omega: " << omega << " ";
-    cout << "time: " << data.time << " ";
+    //cout << "v: " << v << " ";
+    //cout << "omega: " << omega << " ";
+    //cout << "time: " << data.time << " ";
+  cout << "duty_r: "<<duty_r<<", duty_l: "<<duty_l<<" ";
     cout << "drc: " << data.operation.direction << " ";
     //cout << "brake: "<<brake;
     cout << endl;

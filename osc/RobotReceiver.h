@@ -20,8 +20,8 @@ class RobotReceiver {
 		void update();
 		RobotData getData();
     	permsAry getPermissions();
-		double getcdr() {return CoDuty_right;}
-		double getcdl() {return CoDuty_left;}
+		double getDutyRight() {return Duty_right;}
+		double getDutyLeft() {return Duty_left;}
 		//ETeam getPOOwner(int _id);
 		bool checkMessageReceived(void);
 	private:
@@ -32,7 +32,7 @@ class RobotReceiver {
     std::unique_ptr<UdpListeningReceiveSocket> s;
 		RobotData data;
     permsAry permissions;
-	double CoDuty_right;
-	double CoDuty_left;
+	double Duty_right;
+	double Duty_left;
 		//ETeam owner[3];
 };

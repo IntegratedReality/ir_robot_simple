@@ -17,8 +17,8 @@ class RobotListener : public osc::OscPacketListener {
 	private:
 		RobotData* data;
     permsAry* permissions;
-		double* CoDuty_right;
-		double* CoDuty_left;
+		double* Duty_right;
+		double* Duty_left;
 		//ETeam *owner;
 		bool m_message_received;
 };

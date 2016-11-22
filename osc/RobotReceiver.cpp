@@ -10,13 +10,17 @@ void RobotReceiver::init() {
   }
 
 	//listener.setup(data, permissions);
-  listener_ptr=std::unique_ptr<RobotListener>(new RobotListener(&data, &permissions, &CoDuty_right, &CoDuty_left));
+  listener_ptr=std::unique_ptr<RobotListener>(new RobotListener(&data, &permissions, &Duty_right, &Duty_left));
   s = std::unique_ptr<UdpListeningReceiveSocket>
     (new UdpListeningReceiveSocket
      (IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT_ROBOT), listener_ptr.get() )
      );
 	std::thread th([this](){s -> RunUntilSigInt();});
 	th.detach();
+
+
+  //通信が来る前用のデフォルト値
+  Duty_right = Duty_left = 1.0;
 }
 
 RobotData RobotReceiver::getData() {
