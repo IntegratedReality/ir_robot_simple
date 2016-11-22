@@ -136,14 +136,15 @@ int main(int argc, char **argv)
     //double v = 0, omega = 0;
 
   double coefRot = 0.5;
-  double coefCurve = 0.7;
+  double coefCurve = 0.4;
+
 
     //トルク設定
       switch (data.operation.direction){
         case NO_INPUT:
           //brake = true;
-          motorRight.setMotor(MotorMode::Brake, 0.0);
-          motorLeft.setMotor(MotorMode::Brake, 0.0);
+          motorRight.setMotor(MotorMode::Move, 0.0);
+          motorLeft.setMotor(MotorMode::Move, 0.0);
           break;
         case TOP:
           //v = max_v;
